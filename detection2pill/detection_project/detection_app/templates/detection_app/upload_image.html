@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Image{% endblock %}
+
+{% block content %}
+    <div class="jumbotron" style="text-align: center; font-weight: bold;">
+        <h1 class="display-4">Upload Image</h1>
+        <form method="post" enctype="multipart/form-data" >
+            {% csrf_token %}
+            <div class="form-group mt-3" style="display: inline-block; text-align: left;">
+<!--                {{ form.image.label_tag }}-->
+                {{ form.image }}
+                <img id="image-preview" src="#" alt="Image Preview" style="max-width: 416px; max-height: 416px; display: none;">
+            </div>
+            <div class="text-center"> <!-- Center align the upload button -->
+                <button type="submit" class="btn btn-primary" id="upload-btn">Upload</button>
+                <p class="mt-3" id="waiting-message" style="display: none; font-weight: bold;">Waiting for results...</p>
+            </div>
+        </form>
+        <p class="mt-3">파일 선택을 통해 정보를 알고 싶은 약의 사진을 찍어주세요.</p>
+        <p class="mt-3">이 서비스의 의약 정보는 의약품안전나라의 정보를 알려드립니다.</p>
+        <p class="mt-3"> </p>
+        <p class="mt-3">🚫복용 중인 약의 정확한 정보를 알고 싶으시면🚫</p>
+        <p class="mt-3">🚫처방 받은 병원 혹은 약국에 문의하시면 보다 정확한 정보를 얻을 수 있습니다.🚫</p>
+
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var imagePreview = document.getElementById('image-preview');
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Attach event listener to the file input element
+        document.getElementById("id_image").addEventListener("change", function () {
+            readURL(this);
+        });
+        // Show waiting message when upload button is clicked
+        document.getElementById("upload-btn").addEventListener("click", function (event) {
+            event.preventDefault();
+            var waitingMessage = document.getElementById('waiting-message');
+            waitingMessage.style.display = 'block';
+            var form = document.querySelector('form');
+            form.submit();
+        });
+    });
+    </script>
+{% endblock %}
